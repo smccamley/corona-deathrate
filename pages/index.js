@@ -54,6 +54,10 @@ const References = styled.div``
 
 const Reference = styled.div``
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
 const makeUIPercentage = percentage => {
   return (percentage * 100).toFixed(2) + " %"
 }
@@ -221,10 +225,11 @@ const Home = () => {
       <div>
         <div>
           <BorderBox>
-            Current number of confirmed cases worldwide: {totalConfirmed}
+            Current number of confirmed cases worldwide:{" "}
+            {numberWithCommas(totalConfirmed)}
           </BorderBox>
           <BorderBox>
-            Current number of deaths worldwide: {totalDeaths}
+            Current number of deaths worldwide: {numberWithCommas(totalDeaths)}
           </BorderBox>
         </div>
         <div>
