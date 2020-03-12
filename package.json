@@ -10,6 +10,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "heroku-prebuild": "npm install --dev",
     "heroku-postbuild": "npm run build"
   },
   "keywords": [],
