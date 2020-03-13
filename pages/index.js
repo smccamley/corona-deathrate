@@ -7,6 +7,7 @@ import fetch from "isomorphic-fetch"
 import Head from "next/head"
 import { GlobalStyles } from "../components/GlobalStyles"
 import cache from "../db/jsonResponseCache.json"
+import Link from "next/link"
 
 const Row = styled.div`
   flex-direction: row;
@@ -48,6 +49,22 @@ const SmallSpan = styled.span`
   margin-top: 4px;
   display: block;
   font-size: 10px;
+`
+
+const BigNumber = styled.span`
+  display: block;
+  font-size: 35px;
+`
+
+const DeathRateBox = styled.div`
+  padding: 10px;
+`
+
+const EstimateButton = styled.button`
+  padding: 5px;
+  margin: 5px;
+  display: block;
+  width: 80%;
 `
 
 const References = styled.div``
@@ -148,6 +165,17 @@ const Home = () => {
     getDataOnLoad()
   }, [])
 
+  const changeToHighEstimate = () => {
+    setAsymptomaticPercentage(5.2)
+    setUntestedPercentage(5)
+    setMisdiagnosedPercentage(1)
+  }
+  const changeToLowEstimate = () => {
+    setAsymptomaticPercentage(50)
+    setUntestedPercentage(15)
+    setMisdiagnosedPercentage(3.9)
+  }
+
   if (!data) return <div> Loading...</div>
 
   const { lastUpdated, totalConfirmed, totalDeaths } = data.totals
@@ -222,29 +250,49 @@ const Home = () => {
           </QuarterStyledBox>
         </Row>
       </BorderBox>
-      <div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
         <div>
           <BorderBox>
-            Current number of confirmed cases worldwide:{" "}
-            {numberWithCommas(totalConfirmed)}
+            Current number of confirmed cases worldwide
+            <BigNumber>{numberWithCommas(totalConfirmed)}</BigNumber>
           </BorderBox>
           <BorderBox>
-            Current number of deaths worldwide: {numberWithCommas(totalDeaths)}
+            Current number of deaths worldwide
+            <BigNumber>{numberWithCommas(totalDeaths)}</BigNumber>
           </BorderBox>
         </div>
-        <div>
+        <BorderBox>
           <span>Death Rates</span>
-          <div>
+          <DeathRateBox>
             Using (Deaths / confirmed cases):{" "}
-            {makeUIPercentage(totalDeaths / totalConfirmed)}
-          </div>
-          <div>
-            Using (Deaths / confirmed cases and critical estimates for the above
-            values): {makeUIPercentage(estimatedDeathRate)}
-          </div>
-        </div>
+            <span>{makeUIPercentage(totalDeaths / totalConfirmed)}</span>
+          </DeathRateBox>
+          <DeathRateBox>
+            Using (Deaths / confirmed estimated cases):{" "}
+            <BigNumber style={{ color: "red" }}>
+              {makeUIPercentage(estimatedDeathRate)}
+            </BigNumber>
+          </DeathRateBox>
+        </BorderBox>
+        <BorderBox>
+          <span>Change death rates</span>
+          <EstimateButton onClick={changeToHighEstimate}>
+            {" "}
+            Change to posible high estimate
+          </EstimateButton>
+          <EstimateButton onClick={changeToLowEstimate}>
+            {" "}
+            Change to posible low estimate
+          </EstimateButton>
+        </BorderBox>
       </div>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+        }}
+      >
         <span>Last Updated at</span>
         <span>{new Date(lastUpdated).toGMTString()}</span>
       </div>
@@ -268,6 +316,24 @@ const Home = () => {
             https://www.eurekalert.org/pub_releases/2020-03/arrs-wcs030520.php
           </i>
         </Reference>
+        Data sources:{" "}
+        <Link href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports">
+          WHO
+        </Link>
+        ,{" "}
+        <Link href="https://www.cdc.gov/coronavirus/2019-ncov/index.html">
+          CDC
+        </Link>
+        ,{" "}
+        <Link href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases">
+          ECDC
+        </Link>
+        , <Link href="http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml">NHC</Link>{" "}
+        and{" "}
+        <Link href="https://ncov.dxy.cn/ncovh5/view/pneumonia?scene=2&clicktime=1579582238&enterid=1579582238&from=singlemessage&isappinstalled=0">
+          DXY
+        </Link>{" "}
+        and local media reports.
       </References>
     </Page>
   )
