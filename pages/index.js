@@ -140,7 +140,22 @@ const Home = () => {
     setMisdiagnosedPercentage(3.9)
   }
 
-  if (!data) return <div> Loading...</div>
+  if (!data)
+    return (
+      <div
+        style={{
+          display: "flex",
+          width: "100vw",
+          height: "100vh",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "black",
+          color: "white",
+        }}
+      >
+        Loading...
+      </div>
+    )
 
   const { lastUpdated, totalConfirmed, totalDeaths } = data.totals
 
@@ -279,7 +294,7 @@ const Home = () => {
           marginTop: "10px",
         }}
       >
-        <span>Last Updated at</span>
+        <span>WHO data last updated at</span>
         <span>{new Date(lastUpdated).toGMTString()}</span>
       </div>
       <References>
