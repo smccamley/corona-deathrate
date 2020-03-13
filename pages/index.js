@@ -6,7 +6,6 @@ import styled from "styled-components"
 import fetch from "isomorphic-fetch"
 import Head from "next/head"
 import { GlobalStyles } from "../components/GlobalStyles"
-import cache from "../db/jsonResponseCache.json"
 import Link from "next/link"
 
 const Row = styled.div`
@@ -98,18 +97,6 @@ const makeUIPercentage = percentage => {
   return (percentage * 100).toFixed(2) + " %"
 }
 
-const getDataFromJhuEdu = async () => {
-  if (cache) {
-    return cache
-  }
-  const response = await fetch(
-    "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/1/query?f=json&where=(Confirmed%20%3E%200)%20OR%20(Deaths%3E0)&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Deaths%20desc%2CCountry_Region%20asc%2CProvince_State%20asc&outSR=102100&resultOffset=0&resultRecordCount=250&cacheHint=true",
-  )
-  const json = await response.json()
-  console.log(json)
-  return json
-}
-
 const Home = () => {
   let [data, setData] = useState(null)
   let [asymptomaticPercentage, setAsymptomaticPercentage] = useState(
@@ -124,15 +111,8 @@ const Home = () => {
     if (data) {
       const { totalConfirmed, totalDeaths } = data.totals
 
-      console.log(
-        asymptomaticPercentage,
-        misdiagnosedPercentage,
-        untestedPercentage,
-      )
-
       let totalEstimatedConfirmedPercentage =
         asymptomaticPercentage + misdiagnosedPercentage + untestedPercentage
-      console.log(totalEstimatedConfirmedPercentage)
       let totalConfirmedEstimated =
         totalConfirmed / ((100 - totalEstimatedConfirmedPercentage) / 100)
       setEstimatedDeathRate(totalDeaths / totalConfirmedEstimated)
@@ -142,44 +122,9 @@ const Home = () => {
 
   useEffect(() => {
     let getDataOnLoad = async () => {
-      let data = await getDataFromJhuEdu()
-      let lastUpdated = 0
-      let totalDeaths = 0
-      let totalRecovered = 0
-      let totalConfirmed = 0
-
-      let newData = data.features.map(feature => {
-        const attributes = feature.attributes
-        const newAttributes = {
-          deaths: typeof attributes.Deaths === "number" ? attributes.Deaths : 0,
-          recovered:
-            typeof attributes.Recovered === "number" ? attributes.Recovered : 0,
-          confirmed:
-            typeof attributes.Confirmed === "number" ? attributes.Confirmed : 0,
-          id: attributes.OBJECTID,
-          provinceOrState: attributes.Province_State,
-          countryOrRegion: attributes.Country_Region,
-          lastUpdated: attributes.Last_Update,
-          lat: attributes.Lat,
-          long_: attributes.Long_,
-        }
-
-        if (newAttributes.lastUpdated > lastUpdated)
-          lastUpdated = newAttributes.lastUpdated
-
-        totalDeaths = totalDeaths + newAttributes.deaths
-        totalConfirmed = totalConfirmed + newAttributes.confirmed
-        totalRecovered = totalRecovered + newAttributes.recovered
-
-        return newAttributes
-      })
-
-      const totalsAndOriginalData = {
-        totals: { lastUpdated, totalConfirmed, totalDeaths, totalRecovered },
-        byCountry: newData,
-      }
-
-      setData(totalsAndOriginalData)
+      const response = await fetch("/api/data")
+      const json = await response.json()
+      setData(json)
     }
     getDataOnLoad()
   }, [])
@@ -370,20 +315,7 @@ const Home = () => {
         <Link href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports">
           WHO
         </Link>
-        ,{" "}
-        <Link href="https://www.cdc.gov/coronavirus/2019-ncov/index.html">
-          CDC
-        </Link>
-        ,{" "}
-        <Link href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases">
-          ECDC
-        </Link>
-        , <Link href="http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml">NHC</Link>{" "}
-        and{" "}
-        <Link href="https://ncov.dxy.cn/ncovh5/view/pneumonia?scene=2&clicktime=1579582238&enterid=1579582238&from=singlemessage&isappinstalled=0">
-          DXY
-        </Link>{" "}
-        and local media reports.
+        .
       </References>
     </Page>
   )
