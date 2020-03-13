@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 const Page = styled.div`
-  height: 100vh;
   width: 90vw;
   margin: 0 auto;
   display: flex;

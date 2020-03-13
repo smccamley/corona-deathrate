@@ -12,7 +12,11 @@ import Link from "next/link"
 const Row = styled.div`
   flex-direction: row;
   display: flex;
-  width: 100%;
+  flex: 1;
+  flex-basis: 100%;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `
 
 const Spacer = styled.div`
@@ -20,12 +24,17 @@ const Spacer = styled.div`
   height: 10px;
 `
 
-const QuarterStyledBox = styled(StyledBox)`
-  width: 33%;
+const ThirdStyledBox = styled(StyledBox)`
+  flex: 1;
   text-align: center;
   margin: 10px;
   display: flex;
   flex-direction: column;
+  @media only screen and (max-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 `
 const PercentageInput = styled.input`
   text-align: center;
@@ -39,6 +48,9 @@ const PercentageInput = styled.input`
   background-color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   font-weight: bold;
+  @media only screen and (max-width: 768px) {
+    margin-left: 10px;
+  }
 `
 
 const Percentage = styled.span`
@@ -67,7 +79,14 @@ const EstimateButton = styled.button`
   width: 80%;
 `
 
-const References = styled.div``
+const References = styled.div`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`
+
+const Ref = styled.sup`
+  font-size: 10px;
+`
 
 const Reference = styled.div``
 
@@ -200,11 +219,13 @@ const Home = () => {
           The percentage of people who get the virus and
         </span>
         <Row>
-          <QuarterStyledBox>
-            <span>
-              don't get sick<span>(3)</span>
-            </span>
-            <SmallSpan>(asymptomatic)</SmallSpan>
+          <ThirdStyledBox>
+            <div>
+              <span>
+                don't get sick<Ref>[1.1,1.2]</Ref>
+              </span>
+              <SmallSpan>(asymptomatic)</SmallSpan>
+            </div>
             <div>
               <PercentageInput
                 value={asymptomaticPercentage}
@@ -215,12 +236,14 @@ const Home = () => {
               />{" "}
               <Percentage>%</Percentage>
             </div>
-          </QuarterStyledBox>
-          <QuarterStyledBox>
-            <span>
-              don't get tested<span>(3)</span>
-            </span>
-            <SmallSpan>(stay at home through it all)</SmallSpan>
+          </ThirdStyledBox>
+          <ThirdStyledBox>
+            <div>
+              <span>
+                don't get tested<Ref>[2]</Ref>
+              </span>
+              <SmallSpan>(stay at home through it all)</SmallSpan>
+            </div>
             <div>
               <PercentageInput
                 value={untestedPercentage}
@@ -231,12 +254,14 @@ const Home = () => {
               />{" "}
               <Percentage>%</Percentage>
             </div>
-          </QuarterStyledBox>
-          <QuarterStyledBox>
-            <span>
-              are misdiagnosed<span>(3)</span>
-            </span>
-            <SmallSpan>(and so are not tested)</SmallSpan>
+          </ThirdStyledBox>
+          <ThirdStyledBox>
+            <div>
+              <span>
+                are misdiagnosed<Ref>[3]</Ref>
+              </span>
+              <SmallSpan>(and so are not tested)</SmallSpan>
+            </div>
             <div>
               <PercentageInput
                 value={misdiagnosedPercentage}
@@ -247,10 +272,11 @@ const Home = () => {
               />{" "}
               <Percentage>%</Percentage>
             </div>
-          </QuarterStyledBox>
+          </ThirdStyledBox>
         </Row>
       </BorderBox>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+
+      <Row>
         <div>
           <BorderBox>
             Current number of confirmed cases worldwide
@@ -285,12 +311,13 @@ const Home = () => {
             Change to possible low estimate
           </EstimateButton>
         </BorderBox>
-      </div>
+      </Row>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           textAlign: "center",
+          marginTop: "10px",
         }}
       >
         <span>Last Updated at</span>
@@ -301,11 +328,18 @@ const Home = () => {
         <Reference>
           (1.1) -{" "}
           <i>
-            https://www.livescience.com/how-deadly-is-coronavirus-covid-19.html
+            <Link href="https://www.livescience.com/how-deadly-is-coronavirus-covid-19.html">
+              https://www.livescience.com/how-deadly-is-coronavirus-covid-19.html
+            </Link>
           </i>
         </Reference>
         <Reference>
-          (1.2) - <i>https://wwwnc.cdc.gov/eid/article/22/6/15-1080_article</i>
+          (1.2) -{" "}
+          <i>
+            <Link href="https://wwwnc.cdc.gov/eid/article/22/6/15-1080_article">
+              https://wwwnc.cdc.gov/eid/article/22/6/15-1080_article
+            </Link>
+          </i>
         </Reference>
         <Reference>
           (2) - <i>Currently unkown, not enough data</i>
@@ -313,7 +347,9 @@ const Home = () => {
         <Reference>
           (3) -{" "}
           <i>
-            https://www.eurekalert.org/pub_releases/2020-03/arrs-wcs030520.php
+            <Link href="https://www.eurekalert.org/pub_releases/2020-03/arrs-wcs030520.php">
+              https://www.eurekalert.org/pub_releases/2020-03/arrs-wcs030520.php
+            </Link>
           </i>
         </Reference>
         Data sources:{" "}
