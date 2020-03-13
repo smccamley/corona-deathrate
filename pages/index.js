@@ -208,10 +208,24 @@ const Home = () => {
       <Header />
 
       <StyledBox>
-        We have all seen WHO's figures on COVID-19's death rate. The simple way
-        they calculate this death rate is by dividing the number of deaths by
-        the number of cases. This is wrong! It's a poor interpretation of the
-        data for the sake of determining a death rate. They have ignored:
+        We have all seen the{" "}
+        <Link href="http://www.who.org">
+          World Health Organisation's (WHO's)
+        </Link>{" "}
+        figures on COVID-19's death rate. <br />
+        <br />
+        The simple way they calculate this death rate is by dividing the number
+        of deaths by the number of cases.
+        <br />
+        <br /> <b>This is wrong!</b>
+        <br />
+        <br /> It's acutally calculating the death rate,{" "}
+        <u>
+          assuming you get tested and confirmed in a medical institution that is
+          correctly logging the stats with the WHO
+        </u>
+        . To calculate a death rate of the virus, you must also include the
+        three percentages in the box below.
       </StyledBox>
       <Spacer />
       <BorderBox style={{ width: "90vw", padding: "10px 0px 0px 0px" }}>
