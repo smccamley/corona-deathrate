@@ -264,11 +264,11 @@ const Home = () => {
         <BorderBox>
           <span>Death Rates</span>
           <DeathRateBox>
-            Using (Deaths / confirmed cases):{" "}
+            Using (deaths / confirmed cases):{" "}
             <span>{makeUIPercentage(totalDeaths / totalConfirmed)}</span>
           </DeathRateBox>
           <DeathRateBox>
-            Using (Deaths / confirmed estimated cases):{" "}
+            Using (deaths / confirmed estimated cases):{" "}
             <BigNumber style={{ color: "red" }}>
               {makeUIPercentage(estimatedDeathRate)}
             </BigNumber>
@@ -278,11 +278,11 @@ const Home = () => {
           <span>Change death rates</span>
           <EstimateButton onClick={changeToHighEstimate}>
             {" "}
-            Change to posible high estimate
+            Change to possible high estimate
           </EstimateButton>
           <EstimateButton onClick={changeToLowEstimate}>
             {" "}
-            Change to posible low estimate
+            Change to possible low estimate
           </EstimateButton>
         </BorderBox>
       </div>
